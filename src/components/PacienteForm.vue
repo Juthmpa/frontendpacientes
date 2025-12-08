@@ -1,73 +1,93 @@
 <template>
   <h3>{{ isEditing ? 'Editar Paciente' : 'Registrar Nuevo Paciente' }}</h3>
-  <form @submit.prevent="savePaciente">
-    <input type="text" v-model="paciente.nombre" placeholder="Nombre" required>
-    <input type="email" v-model="paciente.correo" placeholder="Correo" required>
-    <input type="number" v-model="paciente.edad" placeholder="Edad" required>
-    <input type="text" v-model="paciente.direccion" placeholder="Dirección" required>
+  <form @submit.prevent="savePaciente" class="paciente-form">
+    <input type="text" v-model="formPaciente.nombre" placeholder="Nombre" required>
+    <input type="email" v-model="formPaciente.correo" placeholder="Correo" required>
+    <input type="number" v-model="formPaciente.edad" placeholder="Edad" required>
+    <input type="text" v-model="formPaciente.direccion" placeholder="Dirección" required>
     
     <input 
       type="text" 
-      v-model="paciente.numeroCedula" 
+      v-model="formPaciente.numeroCedula" 
       placeholder="N° Cédula (Validar)" 
       @blur="validateCedula" 
       required
       maxlength="10"
     >
-    <p v-if="cedulaError" style="color: red; font-size: 0.9em; width: 100%;">{{ cedulaError }}</p>
+    <p v-if="cedulaError" class="error-message">{{ cedulaError }}</p>
 
-    <button type="submit">Guardar Paciente</button>
+    <button type="submit">{{ isEditing ? 'Actualizar Paciente' : 'Guardar Paciente' }}</button>
+    <button type="button" v-if="isEditing" @click="cancelEdit">Cancelar Edición</button>
   </form>
 </template>
 
 <script>
 export default {
     name: 'PacienteForm',
+    // PROP: recibe el objeto paciente a editar. Si es null, es un nuevo registro.
+    props: {
+        pacienteToEdit: {
+            type: Object,
+            default: null
+        }
+    },
+    emits: ['paciente-saved', 'cancel-edit'], // Eventos para notificar al padre
     data() {
         return {
-            paciente: {
+            // Se utiliza una copia local del objeto para evitar modificar la prop directamente
+            formPaciente: {
                 nombre: '',
                 correo: '',
                 edad: null,
                 direccion: '',
-                numeroCedula: ''
+                numeroCedula: '',
+                id: null // Necesario para la edición
             },
             isEditing: false, 
             API_URL: 'http://localhost:8080/backend_api/api/pacientes',
             cedulaError: null // Variable para almacenar el mensaje de error de cédula
         }
     },
+    watch: {
+        // Observador que se activa cuando la prop pacienteToEdit cambia (ej. al hacer click en Editar)
+        pacienteToEdit: {
+            handler(newValue) {
+                if (newValue) {
+                    this.isEditing = true;
+                    // Copia profunda del paciente para editar
+                    this.formPaciente = { ...newValue }; 
+                } else {
+                    this.resetForm();
+                }
+            },
+            immediate: true // Se ejecuta al inicio
+        }
+    },
     methods: {
-        /**
-         * Implementa el algoritmo del dígito verificador para la cédula ecuatoriana.
-         * Muestra un error si la validación falla.
-         * @returns {boolean} Retorna true si la cédula es válida.
-         */
+        // --- LÓGICA DE VALIDACIÓN LOCAL DE CÉDULA ---
         validateCedula() {
-            const cedula = this.paciente.numeroCedula;
+            const cedula = this.formPaciente.numeroCedula;
             this.cedulaError = null; // Reiniciar error
 
             if (cedula.length !== 10) {
                 if (cedula.length > 0) {
-                   this.cedulaError = 'La cédula debe tener 10 dígitos.';
+                    this.cedulaError = 'La cédula debe tener 10 dígitos.';
                 }
                 return false;
             }
             
-            // 1. Validar que sean solo números
             if (isNaN(cedula)) {
                 this.cedulaError = 'La cédula debe contener solo números.';
                 return false;
             }
 
-            // 2. Validar provincia (primeros dos dígitos)
             const provincia = parseInt(cedula.substring(0, 2));
             if (provincia < 1 || provincia > 24) {
                 this.cedulaError = 'Código de provincia no válido.';
                 return false;
             }
 
-            // 3. Aplicar el algoritmo
+            // Aplicar el algoritmo del dígito verificador
             const digitoVerificador = parseInt(cedula.substring(9, 10));
             let coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
             let suma = 0;
@@ -75,7 +95,6 @@ export default {
 
             for (let i = 0; i < 9; i++) {
                 valor = parseInt(cedula.substring(i, i + 1)) * coeficientes[i];
-                // Si el valor es mayor a 9, se le resta 9
                 suma += (valor >= 10) ? valor - 9 : valor;
             }
 
@@ -90,18 +109,17 @@ export default {
             return true;
         },
         
+        // --- LÓGICA DE ENVÍO Y EDICIÓN ---
         async savePaciente() {
-            // Validar la cédula justo antes de enviar
             if (!this.validateCedula()) {
-                // Si la validación falla, nos aseguramos de que el error sea visible
                 if (this.cedulaError === null) {
                     this.cedulaError = 'Por favor, ingrese un número de cédula válido.';
                 }
-                return; // Detiene el envío
+                return; 
             }
 
             const method = this.isEditing ? 'PUT' : 'POST';
-            const url = this.isEditing ? `${this.API_URL}/${this.paciente.id}` : this.API_URL;
+            const url = this.isEditing ? `${this.API_URL}/${this.formPaciente.id}` : this.API_URL;
 
             try {
                 const response = await fetch(url, {
@@ -109,42 +127,52 @@ export default {
                     headers: {
                         'Content-Type': 'application/json' 
                     },
-                    body: JSON.stringify(this.paciente)
+                    // Usar la copia local para enviar los datos
+                    body: JSON.stringify(this.formPaciente) 
                 });
 
                 if (response.status === 201 || response.ok) {
-                    alert('Paciente guardado exitosamente.');
+                    alert(`Paciente ${this.isEditing ? 'actualizado' : 'registrado'} exitosamente.`);
                     this.resetForm(); 
-                    this.$emit('paciente-saved'); 
+                    this.$emit('paciente-saved'); // Notificar al padre para recargar la lista
                 } else {
-                    // El Backend puede devolver un error 400 con un mensaje detallado (ej. cédula inválida)
                     const errorData = await response.json().catch(() => ({ message: response.statusText }));
+                    // Muestra el mensaje de error de la API (ej. "La cédula ya está registrada")
                     alert(`Error al guardar: ${errorData.message}`);
                 }
             } catch (error) {
                 console.error("Save Error:", error);
-                alert("Error de conexión con el servidor.");
+                alert("Error de conexión con el servidor. Verifique que WildFly esté corriendo.");
             }
         },
         
+        // --- UTILIDADES ---
         resetForm() {
-            this.paciente = { nombre: '', correo: '', edad: null, direccion: '', numeroCedula: '' };
+            this.formPaciente = { nombre: '', correo: '', edad: null, direccion: '', numeroCedula: '', id: null };
             this.isEditing = false;
-            this.cedulaError = null; // Reiniciar el error de cédula
+            this.cedulaError = null;
+        },
+        
+        cancelEdit() {
+            this.resetForm();
+            this.$emit('cancel-edit'); // Notificar al padre que la edición se canceló
         }
     }
 }
 </script>
+
 <style scoped>
 /* Estilos solo para el formulario */
-form {
+.paciente-form {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
     flex-wrap: wrap; 
+    border: 1px solid #007bff;
+    padding: 15px;
+    border-radius: 8px;
 }
 
-/* Ajuste para que los inputs ocupen todo el ancho y el mensaje de error quede bien */
 input[type="text"], input[type="email"], input[type="number"] {
     padding: 8px;
     border: 1px solid #ccc;
@@ -153,17 +181,28 @@ input[type="text"], input[type="email"], input[type="number"] {
     min-width: 150px;
 }
 
-/* El campo de cédula ocupa más espacio para la validación */
-input[placeholder*="Cédula"] {
-    flex-grow: 1;
-}
-
-button[type="submit"] {
+button[type="submit"], button[type="button"] {
     padding: 10px 15px;
-    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+}
+
+button[type="button"] {
+    background-color: #dc3545; /* Botón de cancelar */
+}
+
+/* Estilo para el mensaje de error de la cédula */
+.error-message {
+    color: red; 
+    font-size: 0.9em; 
+    width: 100%; /* Asegura que ocupe toda la fila */
+    margin-top: -5px;
+    margin-bottom: 5px;
 }
 </style>

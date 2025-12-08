@@ -8,8 +8,7 @@
         <th>Correo</th>
         <th>Edad</th>
         <th>Estado (Activo)</th>
-        <th>Acción</th>
-      </tr>
+        <th>Acción</th> </tr>
     </thead>
     <tbody>
       <tr v-for="paciente in pacientes" :key="paciente.id">
@@ -19,6 +18,14 @@
         <td>{{ paciente.edad }}</td>
         <td>{{ paciente.activo ? 'Sí' : 'No' }}</td>
         <td>
+          <button @click="editPaciente(paciente)">
+            Editar
+          </button>
+          
+          <button @click="viewDetails(paciente)">
+            Ver Detalles
+          </button>
+
           <button @click="toggleStatus(paciente)">
             {{ paciente.activo ? 'Desactivar' : 'Activar' }}
           </button>
@@ -32,29 +39,47 @@
 export default {
     name: 'PacientesList',
     props: ['pacientes'],
+    emits: ['status-changed', 'edit-paciente', 'view-details'], // Declaración de eventos emitidos
     methods: {
+        // Método ya existente para cambiar el estado (PUT /api/pacientes/{id}/status)
         async toggleStatus(paciente) {
             const nuevoEstado = !paciente.activo;
-            const url = `http://localhost:8080/backend_api/api/pacientes/${paciente.id}/status?activo=${nuevoEstado}`; // Endpoint de estado
+            // Asegúrate de usar la URL y puerto correctos de tu WildFly
+            const url = `http://localhost:8080/backend_api/api/pacientes/${paciente.id}/status?activo=${nuevoEstado}`; 
 
             try {
                 const response = await fetch(url, {
-                    method: 'PUT' // Consumir el PUT para activar/desactivar [cite: 42, 67]
+                    method: 'PUT' // Consumir el PUT para activar/desactivar
                 });
 
                 if (response.ok) {
                     alert(`Paciente ${paciente.nombre} ${nuevoEstado ? 'activado' : 'desactivado'}.`);
-                    this.$emit('status-changed'); // Recargar lista
+                    this.$emit('status-changed'); // Notifica al padre para recargar la lista
                 } else {
                     alert('Error al cambiar el estado.');
                 }
             } catch (error) {
                 console.error("Status Change Error:", error);
             }
+        },
+
+        // Nuevo método para EDITAR (emite el paciente al padre)
+        editPaciente(paciente) {
+            // Se emite un evento con el paciente seleccionado para que el componente principal
+            // cargue el formulario de registro con los datos para edición.
+            this.$emit('edit-paciente', paciente); 
+        },
+
+        // Nuevo método para VER DETALLES (emite el paciente al padre)
+        viewDetails(paciente) {
+            // Se emite un evento con el paciente seleccionado.
+            // El componente principal puede usar este evento para abrir un modal o una vista de solo lectura.
+            this.$emit('view-details', paciente); 
         }
     }
 }
 </script>
+
 <style scoped>
 table {
     width: 100%;
@@ -71,5 +96,11 @@ th, td {
 th {
     background-color: #f2f2f2;
     font-weight: bold;
+}
+
+td button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 </style>
