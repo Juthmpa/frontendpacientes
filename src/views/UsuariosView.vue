@@ -57,13 +57,17 @@ export default {
          * Maneja el evento emitido por UsuariosList (al hacer click en Editar)
          * @param {Object} usuario - El objeto usuario a editar.
          */
-        abrirFormularioEdicion(usuario) {
-            // Carga el objeto usuario en la variable de estado.
-            this.usuarioParaEditar = usuario;
-            
-            // Opcional: Desplazar la vista al formulario para mejor UX
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        },
+       abrirFormularioEdicion(usuario) {
+        // --- AGREGAR ESTO TEMPORALMENTE ---
+        console.log("Usuario recibido para edición:", usuario);
+        // --- FIN TEMPORAL ---
+        
+        // Carga el objeto usuario en la variable de estado.
+        this.usuarioParaEditar = usuario;
+        
+        // Opcional: Desplazar la vista al formulario para mejor UX
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
 
         /**
          * Se llama cuando el formulario termina de Guardar o Actualizar.

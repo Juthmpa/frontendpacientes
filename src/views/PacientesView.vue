@@ -42,7 +42,7 @@ export default {
     // Método para cargar la lista desde el API
     async fetchPacientes() {
       try {
-        const response = await fetch('http://localhost:8081/backend_api/api/pacientes'); 
+        const response = await fetch('http://localhost:8080/backend_api/api/pacientes'); 
         if (!response.ok) {
           throw new Error('Error al obtener la lista de pacientes');
         }

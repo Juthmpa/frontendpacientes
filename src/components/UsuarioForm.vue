@@ -3,7 +3,6 @@
     <form @submit.prevent="saveUsuario" class="usuario-form">
         <input type="text" v-model="formUsuario.nombre" placeholder="Nombre" required>
         <input type="email" v-model="formUsuario.correo" placeholder="Correo" required>
-        
         <input type="text" v-model="formUsuario.username" placeholder="Username" required>
         
         <input 

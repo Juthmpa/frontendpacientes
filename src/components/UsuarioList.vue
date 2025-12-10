@@ -9,8 +9,7 @@
                 <th>Username</th>
                 <th>Rol</th>
                 <th>Estado (Activo)</th>
-                <th>Acción</th> 
-            </tr>
+                <th>Acción</th> </tr>
         </thead>
         <tbody>
             <tr v-for="usuario in usuarios" :key="usuario.id">
@@ -23,6 +22,10 @@
                 <td>
                     <button @click="editUsuario(usuario)">
                         Editar
+                    </button>
+
+                    <button @click="viewDetails(usuario)">
+                    Ver Detalles
                     </button>
                     
                     <button @click="toggleStatus(usuario)">
@@ -38,7 +41,7 @@
 export default {
     name: 'UsuariosList',
     props: ['usuarios'],
-    emits: ['status-changed', 'edit-usuario'],
+    emits: ['status-changed', 'edit-usuario', 'view-details'], // Declaración de eventos emitidos
     methods: {
         // Método para cambiar el estado (PUT /api/usuarios/{id}/status)
         async toggleStatus(usuario) {
@@ -48,7 +51,7 @@ export default {
 
             try {
                 const response = await fetch(url, {
-                    method: 'PUT' 
+                    method: 'PUT' // Consumir el PUT para activar/desactivar
                 });
 
                 if (response.ok) {
@@ -65,7 +68,16 @@ export default {
 
         // Método para EDITAR (emite el usuario al padre)
         editUsuario(usuario) {
+            // Se emite un evento con el usuario seleccionado para que el componente principal
+            // cargue el formulario de registro con los datos para edición.
             this.$emit('edit-usuario', usuario); 
+        },
+
+        // Método para VER DETALLES (emite el paciente al padre)
+        viewDetails(usuario) {
+            // Se emite un evento con el paciente seleccionado.
+            // El componente principal puede usar este evento para abrir un modal o una vista de solo lectura.
+            this.$emit('view-details', usuario); 
         }
     }
 }

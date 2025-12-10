@@ -56,21 +56,22 @@ export default {
                     alert(`Paciente ${paciente.nombre} ${nuevoEstado ? 'activado' : 'desactivado'}.`);
                     this.$emit('status-changed'); // Notifica al padre para recargar la lista
                 } else {
-                    alert('Error al cambiar el estado.');
+                    alert('Error al cambiar el estado del paciente.');
                 }
             } catch (error) {
                 console.error("Status Change Error:", error);
+                alert("Error de conexión con el servidor. Verifique que WildFly esté corriendo.");
             }
         },
 
-        // Nuevo método para EDITAR (emite el paciente al padre)
+        // Método para EDITAR (emite el paciente al padre)
         editPaciente(paciente) {
             // Se emite un evento con el paciente seleccionado para que el componente principal
             // cargue el formulario de registro con los datos para edición.
             this.$emit('edit-paciente', paciente); 
         },
 
-        // Nuevo método para VER DETALLES (emite el paciente al padre)
+        // Método para VER DETALLES (emite el paciente al padre)
         viewDetails(paciente) {
             // Se emite un evento con el paciente seleccionado.
             // El componente principal puede usar este evento para abrir un modal o una vista de solo lectura.
