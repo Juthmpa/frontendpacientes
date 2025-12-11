@@ -1,9 +1,17 @@
-import { createApp } from 'vue'
+import { createApp, h } from 'vue'
 import './style.css'
 import App from './App.vue'
 import router from './router'
+import RolesProvider from './components/RolesProvider.vue'
 
-createApp(App)
-    .use(router)
-    .mount('#app')
+createApp({
+    render() {
+        return h(RolesProvider, null, {
+            default: () => h(App)
+        })
+    }
+})
+.use(router)
+.mount('#app')
+
 

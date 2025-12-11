@@ -1,20 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import UsuariosView from './views/UsuariosView.vue';
 import PacientesView from './views/PacientesView.vue';
+import UsuariosView from './views/UsuariosView.vue';
+import LoginView from './components/Login.vue';
 
 const routes = [
+    {
+        path: '/pacientes',
+        name: 'pacientes',
+        component: PacientesView
+
+    },
     {
         path: '/usuarios',
         name: 'usuarios',
         component: UsuariosView
     },
     {
-        path: '/pacientes',
-        name: 'pacientes',
-        component: PacientesView
+        path: '/login',
+        name: 'login',
+        component: LoginView
 
     }
+    
 ];
 
 const router = createRouter({

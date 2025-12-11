@@ -16,7 +16,7 @@
             <option value="" disabled>Seleccionar Rol</option>
             <option value="admin">Administrador</option>
             <option value="medico">Médico</option>
-            <option value="paciente">Paciente/Cliente</option>
+            <option value="paciente">Paciente</option>
         </select>
 
         <button type="submit">{{ isEditing ? 'Actualizar Usuario' : 'Guardar Usuario' }}</button>
