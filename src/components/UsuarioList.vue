@@ -20,16 +20,16 @@
                 <td>{{ usuario.rol }}</td>
                 <td>{{ usuario.activo ? 'Sí' : 'No' }}</td>
                 <td>
-                    <button @click="editUsuario(usuario)">
-                        Editar
+                    <button @click="editUsuario(usuario)" title="Editar">
+                        <i class="fa-solid fa-pen"></i>
                     </button>
 
-                    <button @click="viewDetails(usuario)">
-                    Ver Detalles
+                    <button @click="viewDetails(usuario)" title="Ver Detalle">
+                    <i class="fa-solid fa-eye"></i>
                     </button>
                     
-                    <button @click="toggleStatus(usuario)">
-                        {{ usuario.activo ? 'Desactivar' : 'Activar' }}
+                    <button @click="toggleStatus(usuario)" title="Cambiar estado">
+                        <i class="fa-solid fa-power-off"></i>
                     </button>
                 </td>
             </tr>

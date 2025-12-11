@@ -8,7 +8,7 @@
         <th>Correo</th>
         <th>Edad</th>
         <th>Estado (Activo)</th>
-        <th>Acción</th> </tr>
+        <th>Acciones</th> </tr>
     </thead>
     <tbody>
       <tr v-for="paciente in pacientes" :key="paciente.id">
@@ -18,16 +18,16 @@
         <td>{{ paciente.edad }}</td>
         <td>{{ paciente.activo ? 'Sí' : 'No' }}</td>
         <td>
-          <button @click="editPaciente(paciente)">
-            Editar
+          <button @click="editPaciente(paciente)" title="Editar">
+            <i class="fa-solid fa-pen"></i>
           </button>
           
-          <button @click="viewDetails(paciente)">
-            Ver Detalles
+          <button @click="viewDetails(paciente)" title="Ver Detalles">
+           <i class="fa-solid fa-eye"></i>
           </button>
 
-          <button @click="toggleStatus(paciente)">
-            {{ paciente.activo ? 'Desactivar' : 'Activar' }}
+          <button @click="toggleStatus(paciente)" title="Cambiar Estado">
+            <i class="fa-solid fa-power-off"></i>
           </button>
         </td>
       </tr>

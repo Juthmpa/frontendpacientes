@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import PacientesView from './views/PacientesView.vue';
 import UsuariosView from './views/UsuariosView.vue';
+import MedicosView from './views/MedicosView.vue';   
 import LoginView from './components/Login.vue';
 
 const routes = [
@@ -9,7 +10,6 @@ const routes = [
         path: '/pacientes',
         name: 'pacientes',
         component: PacientesView
-
     },
     {
         path: '/usuarios',
@@ -17,12 +17,15 @@ const routes = [
         component: UsuariosView
     },
     {
+        path: '/medicos',               
+        name: 'medicos',
+        component: MedicosView
+    },
+    {
         path: '/login',
         name: 'login',
         component: LoginView
-
     }
-    
 ];
 
 const router = createRouter({
@@ -31,3 +34,4 @@ const router = createRouter({
 });
 
 export default router;
+

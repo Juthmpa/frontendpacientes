@@ -52,8 +52,7 @@ export default {
       }
     },
 
-    // --- NUEVOS MÉTODOS PARA MANEJAR EVENTOS ---
-    
+     
     /**
      * Maneja el evento emitido por PacientesList (al hacer click en Editar)
      * @param {Object} paciente - El objeto paciente a editar.
