@@ -66,10 +66,10 @@ export default {
     // Mostrar detalles del Médico
     mostrarModalDetalles(medico) {
       alert(`Detalles del Médico:
-ID: ${medico.id}
-Nombre: ${medico.nombre}
-Especialidad: ${medico.especialidad}
-Estado: ${medico.activo ? 'Activo' : 'Inactivo'}`);
+    ID: ${medico.id}
+    Nombre: ${medico.nombre}
+    Especialidad: ${medico.especialidad}
+    Estado: ${medico.activo ? 'Activo' : 'Inactivo'}`);
     },
 
     // Se ejecuta después de guardar/actualizar

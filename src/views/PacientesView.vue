@@ -72,13 +72,13 @@ export default {
      */
     mostrarModalDetalles(paciente) {
         alert(`Detalles del Paciente:
-ID: ${paciente.id}
-Nombre: ${paciente.nombre}
-Correo: ${paciente.correo}
-Edad: ${paciente.edad}
-Dirección: ${paciente.direccion}
-Cédula: ${paciente.numeroCedula}
-Estado: ${paciente.activo ? 'Activo' : 'Inactivo'}`);
+      ID: ${paciente.id}
+      Nombre: ${paciente.nombre}
+      Correo: ${paciente.correo}
+      Edad: ${paciente.edad}
+      Dirección: ${paciente.direccion}
+      Cédula: ${paciente.numeroCedula}
+      Estado: ${paciente.activo ? 'Activo' : 'Inactivo'}`);
     },
 
     /**
