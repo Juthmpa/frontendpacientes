@@ -47,7 +47,7 @@ export default {
         async toggleStatus(medico) {
             const nuevoEstado = !medico.activo;
 
-            const url = `http://localhost:8080/backend_api/api/medicos/${medico.id}/estado?activo=${nuevoEstado}`;
+            const url = `http://localhost:8080/backend_api/api/medicos/${medico.id}/status?activo=${nuevoEstado}`;
 
             try {
                 const response = await fetch(url, { method: 'PUT' });

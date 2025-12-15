@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import PacientesView from './views/PacientesView.vue';
 import UsuariosView from './views/UsuariosView.vue';
 import MedicosView from './views/MedicosView.vue';   
+import CitasView from './views/CitasView.vue';   
 import LoginView from './components/Login.vue';
 
 const routes = [
@@ -25,6 +26,12 @@ const routes = [
         path: '/login',
         name: 'login',
         component: LoginView
+    }
+    ,
+    {
+        path: '/citas',
+        name: 'citas',
+        component: CitasView
     }
 ];
 

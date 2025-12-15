@@ -2,20 +2,36 @@
     <nav v-if="user" class="navbar">
 
         <!-- BOTÓN: Gestión de Usuarios (solo ADMIN) -->
-        <a 
+        <router-link 
             v-if="rol === 'ADMIN'"
             href="#usuarios"
         >
             Gestión de Usuarios
-        </a>
+        </router-link>
 
         <!-- BOTÓN: Gestión de Pacientes (ADMIN y MEDICO) -->
-        <a 
+        <router-link 
             v-if="rol === 'ADMIN' || rol === 'MEDICO'"
             href="#pacientes"
         >
             Gestión de Pacientes
-        </a>
+        </router-link>
+
+        <!-- BOTÓN: Gestión de Médicos (ADMIN y PACIENTE) -->
+        <router-link
+            v-if="rol === 'ADMIN' "
+            href="#medicos"
+        >
+            Gestión de Médicos
+        </router-link>
+
+        <!-- BOTÓN: Gestión de Citas (PACIENTE) -->
+        <router-link 
+            v-if="rol === 'ADMIN' || rol === 'MEDICO' || rol === 'PACIENTE'"
+            href="#citas"
+        >
+            Gestión de Citas
+        </router-link>
 
         <!-- Bienvenida -->
         <span class="welcome-message">

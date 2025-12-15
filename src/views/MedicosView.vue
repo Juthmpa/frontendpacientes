@@ -43,7 +43,7 @@ export default {
     // Obtener lista del backend
     async fetchMedicos() {
       try {
-        const response = await fetch('http://localhost:8080/backend_api/api/medicos');
+        const response = await fetch('http://localhost:8080/backend_api/api/medicos/todos');
 
         if (!response.ok) {
           throw new Error('Error al obtener la lista de médicos');

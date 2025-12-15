@@ -9,25 +9,26 @@
 
         <div class="left-buttons">
 
-          <a class="btn-nav" href="/citas">
+          <router-link class="btn-nav" to="/citas">
             <i class="fa-solid fa-calendar-check"></i> Citas
-          </a>
+          </router-link>
 
-          <a 
+          <router-link 
             class="btn-nav" 
-            href="/medicos"
+            to="/medicos"
             v-if="rol === 'ADMIN' || rol === 'MEDICO'"
           >
             <i class="fa-solid fa-user-doctor"></i> Médicos
-          </a>
+          </router-link>
 
-          <a 
+          <router-link 
             class="btn-nav" 
-            href="/pacientes"
+            to="/pacientes"
             v-if="rol === 'ADMIN' || rol === 'MEDICO'"
           >
             <i class="fa-solid fa-hospital-user"></i> Pacientes
-          </a>
+          </router-link>
+
         </div>
 
         <div class="right-buttons">
@@ -35,13 +36,14 @@
             Bienvenido/a, {{ currentUser.nombre }} ({{ rol }})
           </span>
 
-          <a 
+          <router-link 
             class="btn-nav"
-            href="/usuarios"
+            to="/usuarios"
             v-if="rol === 'ADMIN'"
           >
             <i class="fa-solid fa-users"></i> Usuarios
-          </a>
+          </router-link>
+
 
           <a class="btn-nav logout-btn" href="#" @click.prevent="handleLogout">
             <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
